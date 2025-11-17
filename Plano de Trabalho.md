@@ -1,6 +1,6 @@
 # Plano de trabalho - BANZEIRO
 
-| Nome do Projeto:        |**Aplicativo Monitoramento Climático: BANZEIRO**|
+| Nome do Projeto:        |**                 BANZEIRO                   **|
 | ----------------------- | ---------------------------------------------- |
 | Versão:                 | **1.0**                                        |
 | Status:                 | **Em desenvolvimento**                         |
