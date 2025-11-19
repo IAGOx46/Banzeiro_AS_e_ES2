@@ -44,14 +44,12 @@
 | Versionamento do Código    |  GitHub                         |
 | Modelagem de Software      |  Draw.io                        |
 | Prototipagem do sistema    |  Figma                          |
-| Desenvolvimento do Sistema |  Figma                          |
+| Desenvolvimento do Sistema |  VScode                         |
     
 * 2.3 Resultados Esperados
 
     * Espera-se maior precisão e acesso rápido às informações climáticas.
-    * Simplificação do monitoramento do tempo e alertas personalizados.
     * Dados confiáveis e em tempo real para melhor planejamento de atividades.
-    * Relatórios meteorológicos claros e úteis para tomada de decisões.
 
 # 3. Equipe de projeto: papéis e responsabilidades
 
@@ -67,13 +65,13 @@
 
     * GitHub: Desenvolvimento e organização dos repositórios com as devidas informações e documentação das atividades. 
     
-    * Notion: registro diário das dailys e acompanhamento dos objetivos semanais.
-    
     * WhatsApp: canal de comunicação rápida e informal entre os integrantes.
     
     * Reuniões Semanais (via Google Meet ou presencial): alinhamento das atividades, planejamento e execução.
 
 # 4. Escopo Futuro
+
+  * Criar uma versão mobile do sistema web Banzeiro
  
   * Alertar sobre possíveis tempestades na região.
     
