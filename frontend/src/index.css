@@ -1,0 +1,16 @@
+/* RESET GLOBAL PARA ELIMINAR QUALQUER BORDA */
+html, body, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background: #1e73be; /* qualquer cor, não importa */
+}
+
+/* Remove espaçamentos padrões */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
