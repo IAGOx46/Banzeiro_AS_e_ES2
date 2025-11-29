@@ -3,12 +3,18 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const provider = new GoogleAuthProvider();
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -18,12 +24,48 @@ export default function Register() {
 
       await sendEmailVerification(userCredential.user);
 
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email,
+        nome: "",
+        foto: "",
+        criadoEm: new Date(),
+      });
+
       alert("Conta criada! Verifique seu e-mail para ativar o acesso.");
       navigate("/");
     } catch (err) {
       alert("Erro: " + err.message);
     }
   };
+
+  const handleGoogleRegister = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          nome: user.displayName,
+          email: user.email,
+          foto: user.photoURL,
+          criadoEm: new Date(),
+        });
+      }
+
+      alert("Conta criada com Google!");
+      navigate("/dashboard");
+
+    } catch (err) {
+      alert("Erro ao criar conta com Google: " + err.message);
+    }
+  };
+
 
   return (
     <div className="auth-page">
@@ -93,6 +135,19 @@ export default function Register() {
           <button className="auth-btn" type="submit">
             Confirmar Conta
           </button>
+          <button
+            type="button"
+            className="auth-btn google-btn"
+            onClick={handleGoogleRegister}
+          >
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google Logo"
+              style={{ width: "20px", marginRight: "10px" }}
+            />
+            Criar conta com Google
+          </button>
+
         </form>
 
         <p className="auth-link" onClick={() => navigate("/")}>
