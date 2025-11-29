@@ -2,3 +2,7 @@ body{ font-family: Arial, sans-serif; padding: 20px; }
 .auth-container{ max-width: 400px; margin: auto; }
 input{ display:block; margin:8px 0; padding:8px; width:100%; }
 button{ padding:8px 12px; }
+body, html, #root {
+  margin: 0;
+  padding: 0;
+}

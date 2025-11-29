@@ -1,0 +1,55 @@
+.admin-page {
+  height: 100vh;
+  background: linear-gradient(135deg, #0059c9, #4ca9ff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.admin-card {
+  width: 420px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.admin-card h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+label {
+  color: white;
+  font-weight: bold;
+  margin-top: 12px;
+  display: block;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin: 8px 0 16px 0;
+}
+
+.admin-btn {
+  width: 100%;
+  padding: 12px;
+  background: #003c99;
+  color: white;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.admin-btn:hover {
+  background: #002d73;
+}
