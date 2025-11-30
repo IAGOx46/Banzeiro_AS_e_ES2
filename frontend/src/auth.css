@@ -102,3 +102,20 @@
   background: #66baff;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
+
+.google-btn {
+  background: #ffffff;
+  color: #444;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+}
