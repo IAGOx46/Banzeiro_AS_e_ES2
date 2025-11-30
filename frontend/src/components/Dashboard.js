@@ -14,24 +14,19 @@ export default function Dashboard() {
   }
 
   async function loadRiver() {
-    const r = await getRiverLevels();
+    const r = await getRiverLevels("Itacoatiara-AM"); 
     setRiverLevels(r.slice(0, 4));
   }
 
   useEffect(() => {
     async function loadAll() {
       setLoading(true);
-
-      // 🚀 Carrega tudo em paralelo
       await Promise.all([loadWeather(), loadRiver()]);
-
       setLoading(false);
     }
-
     loadAll();
   }, []);
 
-  // 🔥 Tela de carregamento moderna
   if (loading) {
     return (
       <div className="loadingScreen">
@@ -40,15 +35,15 @@ export default function Dashboard() {
       </div>
     );
   }
+  
 
   return (
     <div className="dash-page">
 
-      {/* DASHBOARD PRINCIPAL */}
+      {/* CARD CLIMA */}
       <div className="weather-card">
         <div className="weather-top">
           <h2 className="weather-city">{weather.city}</h2>
-
           <img
             className="weather-icon"
             src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
@@ -67,7 +62,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* 3 CARDS DE CHUVA / UMIDADE / VENTO */}
+      {/* 3 MINI CARDS */}
       <div className="info-row">
         <div className="info-card">
           <span className="info-title">🌧 Probabilidade de Chuva</span>
@@ -85,7 +80,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* CARD DO RIO */}
+      {/* NIVEL DO RIO */}
       <div className="river-card">
         <h3 className="river-title">Atualizações Nível do Rio</h3>
 
@@ -93,9 +88,11 @@ export default function Dashboard() {
           <tbody>
             {riverLevels.map((item, index) => (
               <tr key={index}>
-                <td className="river-date">Dia {item.date}</td>
+                <td className="river-date">
+                  Dia {item.data.toLocaleDateString()}
+                </td>
                 <td className="river-icon">🌊</td>
-                <td className="river-level">{item.level} m</td>
+                <td className="river-level">{item.nivel} m</td>
               </tr>
             ))}
           </tbody>

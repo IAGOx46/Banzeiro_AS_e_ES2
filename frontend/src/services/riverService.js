@@ -3,12 +3,34 @@
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
-export async function getRiverLevels() {
-  const q = query(collection(db, "river_levels"), orderBy("date", "desc"));
-  const snapshot = await getDocs(q);
+export async function getRiverLevels(cidade) {
+  try {
+    const ref = collection(db, "nivel_rio", cidade, "registros");
 
-  return snapshot.docs.map((doc) => ({
-    date: doc.data().date,
-    level: doc.data().level
-  }));
+    // Ordena pela data mais recente
+    const q = query(ref, orderBy("data", "desc"));
+
+    const snapshot = await getDocs(q);
+
+    const registros = snapshot.docs.map((doc) => {
+      const d = doc.data();
+
+      const dataConvertida = d.data?.toDate
+        ? d.data.toDate()              // Firestore Timestamp
+        : new Date(d.data);            // string → Date
+
+      return {
+        id: doc.id,
+        data: dataConvertida,
+        nivel: Number(d.nivel) || 0
+      };
+    });
+
+    // Retorna apenas os 5 últimos
+    return registros.slice(0, 5);
+
+  } catch (error) {
+    console.error("Erro ao buscar níveis:", error);
+    return [];
+  }
 }
