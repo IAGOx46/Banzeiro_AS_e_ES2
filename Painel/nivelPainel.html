@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro do Nível do Rio</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 450px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #0284c7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0369a1;
+    }
+
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Registrar Nível do Rio</h2>
+
+  <label>Cidade:</label>
+  <select id="local">
+    <option value="">Selecione</option>
+    <option value="Itacoatiara-AM">Itacoatiara-AM</option>
+    <option value="Manaus-AM">Manaus-AM</option>
+  <select>
+
+
+  <label>Rio:</label>
+  <select id="rio">
+    <option value="">Selecione...</option>
+    <option value="Rio Negro">Rio Negro</option>
+    <option value="Rio Solimões">Rio Solimões</option>
+    <option value="Outros">Outro (digitar abaixo)</option>
+  </select>
+
+  <input type="text" id="rioOutro" placeholder="Digite o nome do rio" style="display:none;">
+
+  <label>Nível (em metros):</label>
+  <input type="number" step="0.01" id="nivel" placeholder="Ex: 27.52">
+
+  <label>Data da medição:</label>
+  <input type="date" id="data">
+
+  <button onclick="salvarNivel()">Salvar no Firestore</button>
+
+  <div id="msg"></div>
+
+  <!-- FIREBASE + SISTEMA DE GRAVAÇÃO -->
+  <script type="module">
+    // Firebase Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc 
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Configuração Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_s9aU_u4y9-QdKAJaTve8md9FZxc5CS8",
+      authDomain: "banzeiro-5f94c.firebaseapp.com",
+      projectId: "banzeiro-5f94c",
+      storageBucket: "banzeiro-5f94c.firebasestorage.app",
+      messagingSenderId: "485805652054",
+      appId: "1:485805652054:web:fe648f81b3bdf94ceca3f7"
+    };
+
+    // Inicializa Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Mostrar campo "Outro rio" se selecionado
+    document.getElementById("rio").addEventListener("change", function () {
+      const rioOutro = document.getElementById("rioOutro");
+      rioOutro.style.display = (this.value === "Outros") ? "block" : "none";
+    });
+
+    // Função para salvar os dados
+    async function salvarNivel() {
+      const local = document.getElementById("local").value;  // CIDADE
+      const selectRio = document.getElementById("rio").value;
+      const rioOutro = document.getElementById("rioOutro").value;
+      const nivel = parseFloat(document.getElementById("nivel").value);
+      const data = document.getElementById("data").value;
+      const msg = document.getElementById("msg");
+
+      // Decide o nome final do rio
+      const rio = (selectRio === "Outros") ? rioOutro : selectRio;
+
+      // Validação
+      if (!local || !rio || isNaN(nivel) || !data) {
+        msg.innerHTML = "Preencha todos os campos corretamente!";
+        msg.style.color = "red";
+        return;
+      }
+
+      try {
+        // Coleção por cidade: nivel_rio > cidade > registros
+        const ref = collection(db, "nivel_rio", local, "registros");
+
+        await addDoc(ref, {
+          cidade: local,
+          rio: rio,
+          nivel: nivel,
+          data: data
+        });
+
+        msg.innerHTML = "Nível registrado com sucesso!";
+        msg.style.color = "green";
+
+        // Limpar campos
+        document.getElementById("local").value = "";
+        document.getElementById("rio").value = "";
+        document.getElementById("rioOutro").value = "";
+        document.getElementById("rioOutro").style.display = "none";
+        document.getElementById("nivel").value = "";
+        document.getElementById("data").value = "";
+
+      } catch (error) {
+        console.error("Erro ao salvar:", error);
+        msg.innerHTML = "Erro ao salvar!";
+        msg.style.color = "red";
+      }
+    }
+
+    // Tornar visível no HTML
+    window.salvarNivel = salvarNivel;
+
+  </script>
+
+</body>
+</html>
