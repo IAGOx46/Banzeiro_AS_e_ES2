@@ -1,0 +1,9 @@
+{
+  "name": "Banzeiro",
+  "short_name": "Banzeiro",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0000ff",
+  "description": "Sistema Banzeiro - App Web Instalável"
+}
