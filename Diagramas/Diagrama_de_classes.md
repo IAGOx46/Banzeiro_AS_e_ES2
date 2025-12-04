@@ -7,7 +7,7 @@ No diagrama de classe, representa o arquitetura conceitual do nosso sistema de m
 
 **Integração com a API externa**, responsáveis por fornecer dados do clima.
 
-**Camadas de domínio**, como Nível do Rio e Previsão Climática, que processam armazenam informações coletadas.
+**Camadas de domínio**, como Previsão Climática, que processa e armazena informações coletadas.
 
 **Gerenciamento de usuários e administrador**, permitindo autenticação, criação de contas e geração de relatórios.
 
