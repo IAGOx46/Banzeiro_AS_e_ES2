@@ -138,8 +138,8 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 ## 3.1 Casos de Uso  
 
 ## 3.2 Diagrama de Classes 
-<img width="756" height="591" alt="image" src="https://github.com/user-attachments/assets/bed58a47-a14a-4486-b5de-dd35d57b4775" />
+<img width="700" height="591" alt="image" src="https://github.com/user-attachments/assets/bed58a47-a14a-4486-b5de-dd35d57b4775" />
 
-
-# 🏁 ITACOATIARA – AM, 2025
+---
+### ITACOATIARA – AM, 2025
 
