@@ -46,44 +46,32 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 
 | ID | Descrição | Prioridade |
 |----|-----------|------------|
-| RF01 | Permitir cadastro de usuários (ribeirinhos, pescadores, agricultores). | Alta |
+| RF01 | Permitir cadastro de usuários. | Alta |
 | RF02 | Autenticar usuários via login e senha. | Alta |
 | RF03 | Permitir consulta às previsões meteorológicas em tempo real. | Alta |
-| RF04 | Emitir alertas de eventos climáticos extremos. | Alta |
-| RF05 | Exibir informações com ícones, cores e áudios acessíveis. | Média |
-| RF06 | Atualização automática dos dados quando houver conexão. | Média |
-| RF07 | Integração com órgãos meteorológicos oficiais. | Alta |
-| RF08 | Navegação intuitiva para todos os perfis de usuários. | Média |
+| RF04 | Exibir informações com ícones, cores acessíveis. | Média |
+| RF05 | Atualização automática dos dados quando houver conexão. | Média |
+| RF06 | Integração com órgãos meteorológicos oficiais. | Alta |
+| RF07 | Navegação intuitiva para todos os perfis de usuários. | Média |
+| RF08 | Permitir ao administrador gerenciar informações e atualizar o nivel dos rios | Alta |
 
 
 ## 2.1.2 Requisitos Não Funcionais
 
 | ID | Descrição | Prioridade | Categoria |
 |----|-----------|------------|-----------|
-| RNF01 | Autenticação multifator (MFA). | Alta | Validação |
-| RNF03 | Precisão >98% para dados meteorológicos/hidrológicos. | Alta | Precisão |
-| RNF04 | Alertas críticos devem ser enviados com 24h de antecedência. | Alta | Alerta |
-| RNF06 | Interface acessível, com linguagem simples e ícones. | Alta | Interface |
-| RNF08 | Meteorologistas podem editar alertas. | Alta | Edição |
-| RNF09 | Preferências sincronizadas automaticamente entre dispositivos. | Média | Sincronização |
+| RNF01 | Verificação de conta | Alta | Validação |
+| RNF02 | Precisão >98% para dados meteorológicos/hidrológicos. | Alta | Precisão |
+| RNF03 | Interface acessível, com linguagem simples e ícones. | Alta | Interface |
 
 
 ## 2.1.3 Regras de Negócio
 
-- **RN01:** Cadastro seguro usando senha ou MFA.  
+- **RN01:** Cadastro seguro usando senha e verificação de conta.  
 - **RN02:** Cada usuário deve ter um perfil único salvo no banco.  
-- **RN03:** Preferências carregam automaticamente no login.  
-- **RN04:** Garantir integridade e confidencialidade dos dados.  
-- **RN05:** Armazenar rotina (dias, horários, localização) dos pescadores.  
-- **RN06:** Previsões devem considerar maré, ventos, chuvas, temperatura.  
-- **RN07:** Clima personalizado apenas para pescadores ribeirinhos.  
-- **RN08:** Dados personalizados sempre atualizados automaticamente.  
-- **RN09:** Integração com CPRM, Defesa Civil e fontes oficiais.  
-- **RN10:** Classificação do nível do rio: normal, atenção, crítico.  
-- **RN11:** Alerta automático quando atingir nível de atenção.  
-- **RN12:** Notificações devem funcionar em segundo plano.  
-- **RN13:** MFA obrigatório e não removível.  
-- **RN14:** Segundo fator via e-mail.  
+- **RN03:** Garantir integridade e confidencialidade dos dados.       
+- **RN04:** Verificação de conta obrigatória e não removível.  
+- **RN05:** Verificação de conta via e-mail.  
 
 ---
 
