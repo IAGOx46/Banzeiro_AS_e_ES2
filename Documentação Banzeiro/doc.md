@@ -46,7 +46,6 @@ Dependem de previsões de clima e nível de rios para tomada de decisões estrat
 | **RF01** | Cadastro de usuários (ribeirinhos, pescadores, agricultores). | Alta |
 | **RF02** | Autenticação via login e senha. | Alta |
 | **RF03** | Consulta às previsões meteorológicas em tempo real. | Alta |
-| **RF04** | Emissão de alertas climáticos extremos. | Alta |
 | **RF05** | Interface acessível com ícones, cores e áudios. | Média |
 | **RF06** | Atualização automática dos dados. | Média |
 | **RF07** | Integração com órgãos meteorológicos oficiais. | Alta |
