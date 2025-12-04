@@ -2,9 +2,15 @@
 
 | Nome do Projeto:        |                  **BANZEIRO**                  |
 | ----------------------- | ---------------------------------------------- |
-| Versão:                 | **1.0**                                        |
-| Status:                 | **Em desenvolvimento**                         |
+| Versão:                 | **2.0**                                        |
+| Status:                 | **Desenvolvido**                               |
 | Scrum Master:           | Lucas Castro do Anjos                          |
+
+## Equipe Responsável pela Elaboração
+* Geovanni Veras
+* Iago Vinicius
+* Lucas Castro
+* Marcos Gabriel
 
 # 1. Introdução
 * 1.1 Objetivo
