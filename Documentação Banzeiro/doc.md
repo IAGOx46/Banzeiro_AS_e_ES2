@@ -47,7 +47,7 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 | ID | Descrição | Prioridade |
 |----|-----------|------------|
 | RF01 | Permitir cadastro de usuários. | Alta |
-| RF02 | Autenticar usuários via login e senha. | Alta |
+| RF02 | Autenticar usuários via e-mail. | Alta |
 | RF03 | Permitir consulta às previsões meteorológicas em tempo real. | Alta |
 | RF04 | Exibir informações com ícones, cores acessíveis. | Média |
 | RF05 | Atualização automática dos dados quando houver conexão. | Média |
