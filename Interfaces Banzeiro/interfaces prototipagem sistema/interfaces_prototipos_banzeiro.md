@@ -13,7 +13,8 @@ O protótipo inclui telas como Boas-vindas, Cadastro, Login, Dashboard, Históri
 <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/56f0e37aa5b40f6f357799554383ba9e5c93aac9/images/Tela%20Login.png " width="600">
 
 ## Tela Inicial do Banzeiro
-<img src=" " width="600">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/360de6ad2ce2eeaf260409007bf192f6367c4246/images/Tela%20Inicial.png" width="600">
+
 
 
 
