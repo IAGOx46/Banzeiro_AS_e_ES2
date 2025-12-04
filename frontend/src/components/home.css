@@ -1,0 +1,116 @@
+/* ===== FUNDO COM DEGRADÊ ===== */
+.home-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+    135deg,
+    #0b4ea8 0%,
+    #0d63c9 40%,
+    #1e7dd3 70%,
+    #488ec8 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  padding: 20px;
+}
+
+/* ===== CONTEÚDO CENTRAL ===== */
+.home-content {
+  max-width: 700px;
+  animation: fadeIn 1s ease;
+}
+
+/* ===== TÍTULOS ===== */
+.home-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.home-subtitle {
+  font-size: 22px;
+  font-weight: 300;
+  opacity: 0.95;
+  margin-bottom: 60px;
+}
+
+/* ===== BOTÕES ===== */
+.home-buttons {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-bottom: 70px;
+}
+
+.home-btn {
+  background: #00a6ff;
+  border: none;
+  padding: 14px 45px;
+  font-size: 20px;
+  border-radius: 40px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+.home-btn:hover {
+  background: #0092e0;
+  transform: translateY(-2px);
+}
+
+/* ===== LINK INFERIOR ===== */
+.home-login-text {
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.home-login-link {
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ===== ANIMAÇÃO SUAVE ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 600px) {
+  .home-title {
+    font-size: 32px;
+  }
+
+  .home-subtitle {
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .home-btn {
+    width: 100%;
+  }
+}
+/* ===== LOGO ===== */
+.home-logo {
+  width: 275px;
+  margin-bottom: 30px;
+  animation: fadeIn 1.2s ease;
+}
