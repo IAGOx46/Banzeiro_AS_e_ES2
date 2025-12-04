@@ -2,7 +2,7 @@
 ### Universidade Federal do Amazonas – UFAM  
 ### Instituto de Ciências Exatas e Tecnologia  
 ### Engenharia de Software II — 2025  
-
+---
 ## Responsável
 ### **Walter Jonas de Sousa Viana**
 
