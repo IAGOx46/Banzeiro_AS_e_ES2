@@ -53,7 +53,7 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 | RF05 | Atualização automática dos dados quando houver conexão. | Média |
 | RF06 | Integração com órgãos meteorológicos oficiais. | Alta |
 | RF07 | Navegação intuitiva para todos os perfis de usuários. | Média |
-| RF08 | Permitir ao administrador gerenciar e atualizar o nivel dos rios | Alta |
+| RF08 | Permitir ao administrador atualizar o nivel dos rios | Alta |
 
 
 ## 2.1.2 Requisitos Não Funcionais
