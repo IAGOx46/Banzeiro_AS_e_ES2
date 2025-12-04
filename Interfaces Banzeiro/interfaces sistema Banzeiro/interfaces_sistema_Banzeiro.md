@@ -15,10 +15,11 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/9dedc7b8c0e004221af569f765be370be4679f79/images/Banzeiro%20-%20Login.png " width="757"> <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/c0a754447f87b61c7eb741d96e9693a19f7c6995/images/Banzeiro%20mobile%20-%20login.jpg " width="250">
 
 ## Tela Inicial Banzeiro
-<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/050d08372a2c54e389a17ef5e5d228c9e91536df/images/Banzeiro%20-%20Menu%20Inicial.png " width="757"> <img src=" " width="250">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/050d08372a2c54e389a17ef5e5d228c9e91536df/images/Banzeiro%20-%20Menu%20Inicial.png " width="757"> <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/bcdb62c2c89aad2a6335c864bc181874db98f1c4/images/Banzeiro%20Mobile%20-%20menu%20inicial.jpg " width="250">
 
 ## Tela painel Administrador
 <img src=" " width="757">
+
 
 
 
