@@ -18,7 +18,8 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 <img src=" " width="757"> <img src=" " width="250">
 
 ## Tela painel Administrador
-<img src=" " width="757"> <img src=" " width="250">
+<img src=" " width="757">
+
 
 
 
