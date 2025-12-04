@@ -59,7 +59,6 @@ Dependem de previsões de clima e nível de rios para tomada de decisões estrat
 |----|-----------|------------|-----------|
 | **RNF01** | Implementação de MFA (autenticação multifator). | Alta | Validação |
 | **RNF03** | Acurácia >98% para dados meteorológicos. | Alta | Precisão |
-| **RNF04** | Alertas críticos com 24 horas de antecedência. | Alta | Alerta |
 | **RNF06** | Interface simples e acessível. | Alta | Interface |
 | **RNF08** | Edição de alertas por meteorologistas. | Alta | Edição |
 | **RNF09** | Sincronização automática de preferências. | Média | Sincronização |
