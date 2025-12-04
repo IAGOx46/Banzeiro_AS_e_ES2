@@ -4,7 +4,7 @@
 ### Engenharia de Software II — 2025  
 ---
 ## Responsável
-### **Walter Jonas de Sousa Viana**
+- **Walter Jonas de Sousa Viana**
 
 ## Equipe Responsável pela Elaboração
 - Geovanni Ferreira Marques Veras  
