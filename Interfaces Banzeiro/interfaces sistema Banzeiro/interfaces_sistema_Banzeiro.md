@@ -18,7 +18,8 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/050d08372a2c54e389a17ef5e5d228c9e91536df/images/Banzeiro%20-%20Menu%20Inicial.png " width="757"> <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/bcdb62c2c89aad2a6335c864bc181874db98f1c4/images/Banzeiro%20Mobile%20-%20menu%20inicial.jpg " width="250">
 
 ## Tela painel Administrador
-<img src=" " width="757">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/d6ea18e6353a0effc1273f4228d9e77a989bedeb/images/Captura%20de%20tela%202025-12-04%20161358.png " width="450">
+
 
 
 
