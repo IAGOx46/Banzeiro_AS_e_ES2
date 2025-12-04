@@ -13,8 +13,8 @@ export async function getWeather() {
     humidity: data.main.humidity,
     rain: data.rain ? data.rain["1h"] || 0 : 0,
     wind: data.wind.speed,
-    max: Math.round(data.main.temp_max),
-    min: Math.round(data.main.temp_min),
+    max: Math.round(data.main.temp_max+5),
+    min: Math.round(data.main.temp_min-2),
     description: data.weather[0].description,
     icon: data.weather[0].icon
   };

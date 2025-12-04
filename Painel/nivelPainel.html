@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Registro do Nível do Rio</title>
+  <meta charset="UTF-8" />
+  <title>Painel Administrativo - Nível do Rio</title>
 
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 450px;
+      max-width: 480px;
       margin: 30px auto;
       padding: 20px;
       border: 1px solid #ddd;
       border-radius: 8px;
     }
 
-    input, select, button {
+    input,
+    select,
+    button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
@@ -37,8 +40,46 @@
       margin-top: 15px;
       font-weight: bold;
     }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #f0f0f0;
+    }
+
+    /* MODAL DE EDIÇÃO */
+    #editModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #editModal .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+    }
   </style>
 </head>
+
 <body>
 
   <h2>Registrar Nível do Rio</h2>
@@ -48,14 +89,14 @@
     <option value="">Selecione</option>
     <option value="Itacoatiara-AM">Itacoatiara-AM</option>
     <option value="Manaus-AM">Manaus-AM</option>
-  <select>
-
+  </select>
 
   <label>Rio:</label>
   <select id="rio">
     <option value="">Selecione...</option>
-    <option value="Rio Negro">Rio Negro</option>
+    <option value="Rio Amazonas">Rio Amazonas</option>
     <option value="Rio Solimões">Rio Solimões</option>
+    <option value="Rio Solimões">Rio Negro</option>
     <option value="Outros">Outro (digitar abaixo)</option>
   </select>
 
@@ -67,21 +108,67 @@
   <label>Data da medição:</label>
   <input type="date" id="data">
 
-  <button onclick="salvarNivel()">Salvar no Firestore</button>
+  <button onclick="salvarNivel()">Salvar</button>
 
   <div id="msg"></div>
 
-  <!-- FIREBASE + SISTEMA DE GRAVAÇÃO -->
+  <hr><br>
+
+  <h3>Registros Salvos</h3>
+
+  <label>Selecionar Cidade para listar registros:</label>
+  <select id="cidadeListagem" onchange="listarRegistros()">
+    <option value="">Selecione</option>
+    <option value="Itacoatiara-AM">Itacoatiara-AM</option>
+    <option value="Manaus-AM">Manaus-AM</option>
+  </select>
+
+  <table id="tabelaRegistros">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Rio</th>
+        <th>Nível</th>
+        <th>Editar</th>
+        <th>Excluir</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- MODAL DE EDIÇÃO -->
+  <div id="editModal">
+    <div class="modal-content">
+      <h3>Editar Registro</h3>
+
+      <label>Rio:</label>
+      <input type="text" id="editRio">
+
+      <label>Nível:</label>
+      <input type="number" step="0.01" id="editNivel">
+
+      <label>Data:</label>
+      <input type="date" id="editData">
+
+      <button onclick="salvarEdicao()">Salvar</button>
+      <button onclick="fecharModal()" style="background:#999; margin-top:10px;">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- FIREBASE -->
   <script type="module">
-    // Firebase Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-      getFirestore, 
-      collection, 
-      addDoc 
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      updateDoc,
+      doc
     } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Configuração Firebase
+    // Configuração
     const firebaseConfig = {
       apiKey: "AIzaSyA_s9aU_u4y9-QdKAJaTve8md9FZxc5CS8",
       authDomain: "banzeiro-5f94c.firebaseapp.com",
@@ -91,67 +178,116 @@
       appId: "1:485805652054:web:fe648f81b3bdf94ceca3f7"
     };
 
-    // Inicializa Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Mostrar campo "Outro rio" se selecionado
-    document.getElementById("rio").addEventListener("change", function () {
-      const rioOutro = document.getElementById("rioOutro");
-      rioOutro.style.display = (this.value === "Outros") ? "block" : "none";
+    const rioSelect = document.getElementById("rio");
+    rioSelect.addEventListener("change", () => {
+      document.getElementById("rioOutro").style.display =
+        rioSelect.value === "Outros" ? "block" : "none";
     });
 
-    // Função para salvar os dados
-    async function salvarNivel() {
-      const local = document.getElementById("local").value;  // CIDADE
-      const selectRio = document.getElementById("rio").value;
+    // ====================
+    // SALVAR
+    // ====================
+    window.salvarNivel = async function () {
+      const local = document.getElementById("local").value;
+      const selectRio = rioSelect.value;
       const rioOutro = document.getElementById("rioOutro").value;
       const nivel = parseFloat(document.getElementById("nivel").value);
       const data = document.getElementById("data").value;
       const msg = document.getElementById("msg");
 
-      // Decide o nome final do rio
-      const rio = (selectRio === "Outros") ? rioOutro : selectRio;
+      const rio = selectRio === "Outros" ? rioOutro : selectRio;
 
-      // Validação
-      if (!local || !rio || isNaN(nivel) || !data) {
-        msg.innerHTML = "Preencha todos os campos corretamente!";
+      if (!local || !rio || !nivel || !data) {
+        msg.textContent = "Preencha todos os campos!";
         msg.style.color = "red";
         return;
       }
 
-      try {
-        // Coleção por cidade: nivel_rio > cidade > registros
-        const ref = collection(db, "nivel_rio", local, "registros");
+      const ref = collection(db, "nivel_rio", local, "registros");
 
-        await addDoc(ref, {
-          cidade: local,
-          rio: rio,
-          nivel: nivel,
-          data: data
-        });
+      await addDoc(ref, { cidade: local, rio, nivel, data });
 
-        msg.innerHTML = "Nível registrado com sucesso!";
-        msg.style.color = "green";
+      msg.textContent = "Salvo com sucesso!";
+      msg.style.color = "green";
 
-        // Limpar campos
-        document.getElementById("local").value = "";
-        document.getElementById("rio").value = "";
-        document.getElementById("rioOutro").value = "";
-        document.getElementById("rioOutro").style.display = "none";
-        document.getElementById("nivel").value = "";
-        document.getElementById("data").value = "";
+      listarRegistros();
+    };
 
-      } catch (error) {
-        console.error("Erro ao salvar:", error);
-        msg.innerHTML = "Erro ao salvar!";
-        msg.style.color = "red";
-      }
-    }
+    // ====================
+    // LISTAR
+    // ====================
+    let cidadeAtual = "";
+    let registroSelecionado = null;
 
-    // Tornar visível no HTML
-    window.salvarNivel = salvarNivel;
+    window.listarRegistros = async function () {
+      cidadeAtual = document.getElementById("cidadeListagem").value;
+      const tbody = document.querySelector("#tabelaRegistros tbody");
 
+      tbody.innerHTML = "";
+      if (!cidadeAtual) return;
+
+      const ref = collection(db, "nivel_rio", cidadeAtual, "registros");
+      const snap = await getDocs(ref);
+
+      snap.forEach((docItem) => {
+        const item = docItem.data();
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>${item.data}</td>
+          <td>${item.rio}</td>
+          <td>${item.nivel} m</td>
+          <td><button onclick="abrirEdicao('${docItem.id}', '${item.rio}', '${item.nivel}', '${item.data}')">Editar</button></td>
+          <td><button onclick="removerRegistro('${docItem.id}')">Excluir</button></td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    };
+
+    // ====================
+    // REMOVER
+    // ====================
+    window.removerRegistro = async function (id) {
+      if (!confirm("Deseja realmente excluir?")) return;
+
+      const ref = doc(db, "nivel_rio", cidadeAtual, "registros", id);
+      await deleteDoc(ref);
+
+      listarRegistros();
+    };
+
+    // ====================
+    // EDITAR
+    // ====================
+    window.abrirEdicao = function (id, rio, nivel, data) {
+      registroSelecionado = id;
+
+      document.getElementById("editRio").value = rio;
+      document.getElementById("editNivel").value = nivel;
+      document.getElementById("editData").value = data;
+
+      document.getElementById("editModal").style.display = "flex";
+    };
+
+    window.fecharModal = function () {
+      document.getElementById("editModal").style.display = "none";
+    };
+
+    window.salvarEdicao = async function () {
+      const rio = document.getElementById("editRio").value;
+      const nivel = parseFloat(document.getElementById("editNivel").value);
+      const data = document.getElementById("editData").value;
+
+      const ref = doc(db, "nivel_rio", cidadeAtual, "registros", registroSelecionado);
+      await updateDoc(ref, { rio, nivel, data });
+
+      fecharModal();
+      listarRegistros();
+    };
   </script>
 
 </body>

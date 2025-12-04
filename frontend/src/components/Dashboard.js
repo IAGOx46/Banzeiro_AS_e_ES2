@@ -131,13 +131,13 @@ export default function Dashboard() {
   );
 }
 
-/* ===== ÍCONES SVG (linha simples, estilo profissional) ===== */
+
 
 function LocationIcon({ className }) {
   return (
     <svg
       className={className}
-      viewBox="0 0 24 24"
+      viewBox="0 0 21 22"
       fill="none"
       stroke="white"
       strokeWidth="1.8"
