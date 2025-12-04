@@ -130,6 +130,22 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 
 # 4. Ferramentas Utilizadas
 
+| **Ferramentas** | **Descrição** |
+|-----------------|---------------|
+| **Firebase** | Usamos o Firebase como nosso banco de dados. Utilizamos também para a integração de APIs relacionadas ao monitoramento climático e para o cadastro dos usuários. |
+| **JavaScript** | Utilizado para a criação do código do nosso programa web. |
+| **Node.js** | Usado para executar códigos JavaScript fora do navegador, principalmente no backend. Isso permitiu a criação de uma plataforma para o servidor, APIs e aplicações de alta performance. |
+| **Git** | Utilizado para versionar e armazenar os arquivos provenientes da parte programável do nosso projeto, redirecionando o código do VS Code para o GitHub. |
+| **GitHub** | Responsável por todo o nosso projeto, onde colocamos nossas informações e armazenamos o código do sistema web. |
+| **HTML** | Foi responsável pela estruturação e criação das páginas web do nosso projeto. |
+| **CSS** | Responsável pela aparência da página, definindo cores, fontes, tamanhos, espaçamentos, bordas e layout. |
+| **VS Code** | Foi o programa responsável pela criação e edição do código do site Banzeiro. |
+| **Figma** | Usado para a criação do nosso MVP e para a representação das telas. |
+| **Astah** | Utilizado para a criação dos nossos diagramas. |
+| **Draw.io** | Usado para a criação dos nossos diagramas. |
+
+
+
 ---
 ### ITACOATIARA – AM, 2025
 
