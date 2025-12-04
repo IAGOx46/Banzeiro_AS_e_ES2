@@ -9,16 +9,17 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 
 
 ## Tela Criar conta
-<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/e006bba85dccb862abc5640c7bca5cbfe3c6221e/images/Banzeiro%20-%20Criar%20conta.png " width="800"> <img src=" " width="800">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/e006bba85dccb862abc5640c7bca5cbfe3c6221e/images/Banzeiro%20-%20Criar%20conta.png " width="757"> <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/c8bd4829f22b05b325ff144072c441e64b04a57e/images/Banzeiro%20mobile%20-%20criar%20conta.jpg " width="250">
 
 ## Tela de Login
-<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/9dedc7b8c0e004221af569f765be370be4679f79/images/Banzeiro%20-%20Login.png " width="800"> <img src=" " width="800">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/9dedc7b8c0e004221af569f765be370be4679f79/images/Banzeiro%20-%20Login.png " width="757"> <img src=" " width="250">
 
 ## Tela Inicial Banzeiro
-<img src=" " width="800"> <img src=" " width="800">
+<img src=" " width="757"> <img src=" " width="250">
 
 ## Tela painel Administrador
-<img src=" " width="800"> <img src=" " width="800">
+<img src=" " width="757"> <img src=" " width="250">
+
 
 
 
