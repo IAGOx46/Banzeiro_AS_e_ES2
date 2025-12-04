@@ -1,6 +1,6 @@
 # Plano de trabalho - BANZEIRO
 
-| Nome do Projeto:        |**                 BANZEIRO                   **|
+| Nome do Projeto:        |                  **BANZEIRO**                  |
 | ----------------------- | ---------------------------------------------- |
 | Versão:                 | **1.0**                                        |
 | Status:                 | **Em desenvolvimento**                         |
@@ -30,9 +30,7 @@
   
 * 2.1.1 Escopo Específico
   
-  * Atualização sobre o nível dos rios.
-  
-  * Informar sobre a qualidade do Ar 
+  * Atualização sobre o nível dos rios. 
   
   * Informar sobre o Clima em tempo real.
    
@@ -76,4 +74,6 @@
   * Alertar sobre possíveis tempestades na região.
     
   * Oferecer dados personalizados sobre o clima com base nas suas atividades locais.
+    
+  * Informar sobre a qualidade do Ar
   
