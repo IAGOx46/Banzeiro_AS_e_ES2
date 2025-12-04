@@ -124,7 +124,7 @@ A instabilidade climática crescente aumenta a demanda por sistemas que forneça
 # 3.  Diagramas UML
 
 ## 3.1 Casos de Uso  
-<img src=" " width="757">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/c569ee734699c2bd9abea675f23704de22b49723/images/caso%20de%20uso%20-%20Banzeiro.jpg " width="700">
 
 
 ## 3.2 Diagrama de Classes 
