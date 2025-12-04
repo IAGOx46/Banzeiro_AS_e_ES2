@@ -77,7 +77,6 @@ Dependem de previsões de clima e nível de rios para tomada de decisões estrat
 - **RN08** — Atualização automática de dados personalizados.  
 - **RN09** — Integração com dados fluviais oficiais.  
 - **RN10** — Classificação do nível do rio: normal, atenção, crítico.  
-- **RN11** — Alertas automáticos ao ultrapassar nível de atenção.  
 - **RN12** — Notificações mesmo em segundo plano.  
 - **RN13** — MFA obrigatório e não desativável.  
 - **RN14** — Segundo fator via e-mail.  
