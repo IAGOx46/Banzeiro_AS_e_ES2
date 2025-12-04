@@ -9,7 +9,7 @@ No diagrama de classe, representa o arquitetura conceitual do nosso sistema de m
 
 **Camadas de domínio**, como Nível do Rio e Previsão Climática, que processam armazenam informações coletadas.
 
-**Gerenciamento de usuários e administrador**, permitindo autenticação, criação de contaas e geração de relatórios.
+**Gerenciamento de usuários e administrador**, permitindo autenticação, criação de contas e geração de relatórios.
 
 **Um controlador central**, coordernar ações como consulta, registro e persistência de dados do sistema.
 
