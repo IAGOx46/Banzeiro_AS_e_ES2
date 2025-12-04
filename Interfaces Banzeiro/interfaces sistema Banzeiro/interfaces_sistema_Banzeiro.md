@@ -11,7 +11,7 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 <img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/e006bba85dccb862abc5640c7bca5cbfe3c6221e/images/Banzeiro%20-%20Criar%20conta.png " width="800">
 
 ## Tela de Login
-<img src=" " width="800">
+<img src="https://github.com/IAGOx46/Banzeiro_AS_e_ES2/blob/9dedc7b8c0e004221af569f765be370be4679f79/images/Banzeiro%20-%20Login.png " width="800">
 
 ## Tela Inicial Banzeiro
 <img src=" " width="800">
@@ -19,7 +19,7 @@ As telas evidenciam como o protótipo foi transformado em um sistema funcional, 
 ## Tela painel Administrador
 <img src=" " width="800">
 
-<img src=" " width="800">
+
 
 
 
