@@ -108,3 +108,13 @@
     transform: translateY(0);
   }
 }
+.profile-btn {
+  width: 100%;
+  padding: 10px 15px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+  color: rgb(0, 110, 255);
+  cursor: pointer;
+}

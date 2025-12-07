@@ -10,7 +10,7 @@ export default function TopBar({ user }) {
 
   const db = getFirestore();
 
-  // 🔥 Busca a foto do usuário no Firestore
+  // 🔥 Carrega foto do Firestore
   useEffect(() => {
     async function loadUserPhoto() {
       if (!user?.uid) return;
@@ -33,7 +33,7 @@ export default function TopBar({ user }) {
     loadUserPhoto();
   }, [user]);
 
-  // 🔥 Fecha menu ao clicar fora
+  // 🔥 Fecha o menu ao clicar fora
   useEffect(() => {
     function handleClickOutside(e) {
       if (!e.target.closest(".profile-area")) {
@@ -51,27 +51,38 @@ export default function TopBar({ user }) {
       .catch((err) => console.error("Erro ao sair:", err));
   }
 
+  // 🔥 Ir para página de perfil
+  const goToProfile = () => {
+    window.location.href = "/profile";
+  };
+
   return (
     <div className="topbar">
       <h1 className="logo">Banzeiro</h1>
 
       <div className="profile-area" onClick={() => setMenuOpen(!menuOpen)}>
         
+        {/* Foto ou fallback */}
         {photoURL ? (
           <img
             src={photoURL}
             alt="Perfil"
             className="profile-photo"
-            onError={() => setPhotoURL(null)} // Fallback se a foto quebrar
+            onError={() => setPhotoURL(null)}
           />
         ) : (
           <div className="profile-circle">
-            {user?.email?.[0]?.toUpperCase() ?? "?"}
+            {user?.email?.charAt(0).toUpperCase() ?? "?"}
           </div>
         )}
 
+        {/* MENU */}
         {menuOpen && (
           <div className="profile-menu">
+            <button className="profile-btn" onClick={goToProfile}>
+              Perfil
+            </button>
+
             <button className="logout-btn" onClick={logout}>
               Sair
             </button>
