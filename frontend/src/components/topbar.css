@@ -1,3 +1,5 @@
+/* ===== TOPBAR ===== */
+
 .topbar {
   position: fixed;
   top: 0;
@@ -18,24 +20,48 @@
   font-weight: bold;
 }
 
+/* Área do perfil (imagem + menu) */
 .profile-area {
   position: relative;
   cursor: pointer;
-}
-
-.profile-circle {
-  width: 42px;
-  height: 42px;
-  background: #1976d2;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
 }
 
+/* ===== FOTO DE PERFIL ===== */
+
+.profile-photo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;        /* 🔥 garante círculo */
+  object-fit: cover;         /* 🔥 evita distorção */
+  overflow: hidden;
+  display: block;
+  border: 2px solid #ffffff50;
+  transition: 0.2s ease;
+}
+
+.profile-photo:hover {
+  transform: scale(1.05);
+}
+
+/* ===== FALLBACK (INICIAL DO USUÁRIO) ===== */
+.profile-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #0a74d4;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  border: 2px solid #ffffff30;
+}
+
+/* ===== MENU DO PERFIL ===== */
 
 .profile-menu {
   position: absolute;
@@ -46,6 +72,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   width: 130px;
+  animation: fadeIn 0.15s ease;
 }
 
 .logout-btn {
@@ -63,6 +90,21 @@
   background: #ffe5e5;
 }
 
+/* ===== DASHBOARD OFFSET ===== */
+
 .dash-page {
-  padding-top: 70px;
+  padding-top: 70px; /* evita que o conteúdo fique atrás da topbar */
+}
+
+/* ===== ANIMAÇÃO ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
