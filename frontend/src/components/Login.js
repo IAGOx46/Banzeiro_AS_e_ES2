@@ -1,100 +1,118 @@
+// frontend/src/components/Login.js
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const provider = new GoogleAuthProvider();
+
+  const handleEmailLogin = async (e) => {
     e.preventDefault();
-
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-
-      if (!result.user.emailVerified) {
-        alert("Verifique seu e-mail antes de entrar!");
-        return;
-      }
-
+      setLoading(true);
+      await signInWithEmailAndPassword(auth, email, password);
+      // redireciona para dashboard
       navigate("/dashboard");
     } catch (err) {
-      alert("Erro: " + err.message);
+      alert("Erro ao fazer login: " + (err.message || err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // se não existir usuário no Firestore, cria documento
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          nome: user.displayName || "",
+          email: user.email || "",
+          foto: user.photoURL || "",
+          criadoEm: new Date(),
+          location: { city: "Itacoatiara-AM" } // padrão: Itacoatiara-AM
+        });
+      }
+
+      // redireciona para dashboard
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Erro ao logar com Google:", err);
+      alert("Erro ao logar com Google: " + (err.message || err));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <h1 className="auth-title">Entrar</h1>
 
-        <h1 className="auth-title">Realizar Login</h1>
-
-        <form onSubmit={handleLogin}>
-          
+        <form onSubmit={handleEmailLogin}>
           <input
             type="email"
             className="auth-input"
-            placeholder="Inserir Email"
+            placeholder="Seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          {/* Senha com ícone profissional */}
-          <div className="password-container">
-            <input
-              type={showPassword ? "text" : "password"}
-              className="password-input"
-              placeholder="Inserir Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+          <input
+            type="password"
+            className="auth-input"
+            placeholder="Sua senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-            <div
-              className="eye-button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? (
-                /* Olho Fechado */
-                <svg viewBox="0 0 24 24" width="22" height="22">
-                  <path
-                    fill="#555"
-                    d="M12 6c3.86 0 7.17 2.22 8.82 5.5-.59 1.15-1.42 2.19-2.41 3.07l1.41 1.41C21.07 
-                    14.63 22 13 22 12c-1.73-4.39-6-7.5-11 -7.5-1.27 0-2.49.2-3.64.57l1.59 1.59C10.42 6.2 
-                    11.2 6 12 6zm-9.64-.57L3.95 7.04C2.76 8.23 1.86 9.58 1 11.5c1.73 4.39 6 7.5 11 
-                    7.5 1.72 0 3.36-.32 4.86-.94l1.78 1.78 1.41-1.41L3.36 4.01 2.36 3z"
-                  />
-                </svg>
-              ) : (
-                /* Olho Aberto */
-                <svg viewBox="0 0 24 24" width="22" height="22">
-                  <path
-                    fill="#555"
-                    d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 
-                    7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11 
-                    -7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 
-                    5-5 5 2.24 5 5-2.24 5-5 
-                    5zm0-8c-1.66 0-3 1.34-3 
-                    3s1.34 3 3 3 3-1.34 
-                    3-3-1.34-3-3-3z"
-                  />
-                </svg>
-              )}
-            </div>
-          </div>
-
-          <button className="auth-btn" type="submit">
-            Entrar na Conta
+          <button className="auth-btn" type="submit" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
 
-        <p className="auth-link" onClick={() => navigate("/register")}>
-          Criar Conta
+        <div style={{ marginTop: 12, textAlign: "center" }}>
+          <span style={{ color: "#e8f1ff", fontSize: 14 }}>ou</span>
+        </div>
+
+        <button
+          type="button"
+          className="auth-btn google-btn"
+          onClick={handleGoogleLogin}
+          style={{ marginTop: 12 }}
+          disabled={loading}
+        >
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google Logo"
+            style={{ width: 20, marginRight: 10 }}
+          />
+          {loading ? "Carregando..." : "Entrar com Google"}
+        </button>
+
+        <p className="auth-link" style={{ marginTop: 18 }}>
+          Não tem conta?{" "}
+          <span style={{ textDecoration: "underline", cursor: "pointer" }} onClick={() => navigate("/register")}>
+            Criar conta
+          </span>
         </p>
       </div>
     </div>

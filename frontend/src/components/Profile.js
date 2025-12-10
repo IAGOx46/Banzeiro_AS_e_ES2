@@ -3,17 +3,20 @@ import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, updateProfile } from "firebase/auth";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
 import "../auth.css";
+import { useNavigate } from "react-router-dom";
+import { db } from "../firebase";
 
 export default function Profile() {
   const [currentUid, setCurrentUid] = useState(null);
   const [nome, setNome] = useState("");
-  const [cidade, setCidade] = useState(""); // inicial vazio para placeholder
+  const [cidade, setCidade] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    const unsubAuth = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "/login";
         return;
@@ -31,7 +34,10 @@ export default function Profile() {
       }
       setLoading(false);
     });
-    return () => unsub();
+
+    return () => {
+      unsubAuth();
+    };
   }, []);
 
   const handleSave = async (e) => {
@@ -54,12 +60,29 @@ export default function Profile() {
     }
   };
 
-  if (loading) {
-    return <div style={{ padding: 20 }}>Carregando perfil...</div>;
-  }
+  // volta para o Dashboard
+  const goToDashboard = () => {
+    navigate("/dashboard");
+  };
+
+  if (loading) return <div style={{ padding: 20 }}>Carregando perfil...</div>;
 
   return (
     <div className="auth-page">
+      {/* Botão fixo no canto superior esquerdo */}
+      <button
+        className="back-top-btn"
+        type="button"
+        onClick={goToDashboard}
+        aria-label="Voltar para o dashboard"
+      >
+        {/* Ícone de seta */}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: 8 }}>
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Dashboard
+      </button>
+
       <div className="auth-card">
         <h1 className="auth-title">Meu Perfil</h1>
 
