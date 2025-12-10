@@ -5,6 +5,7 @@ import { getRiverLevels } from "../services/riverService";
 import TopBar from "../components/TopBar";
 import { auth } from "../firebase";
 import "../dashboard.css";
+import RiverChart from "../components/RiverChart";
 
 export default function Dashboard() {
   const user = auth.currentUser;
@@ -19,7 +20,11 @@ export default function Dashboard() {
 
   async function loadRiver() {
     const r = await getRiverLevels("Itacoatiara-AM");
-    setRiverLevels(r.slice(0, 4));
+    if (Array.isArray(r)) {
+      setRiverLevels(r.slice(0, 4));
+    } else {
+      setRiverLevels([]);
+    }
   }
 
   useEffect(() => {
@@ -104,26 +109,50 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* CARD NÍVEL DO RIO */}
+          {/* CARD NÍVEL DO RIO (APENAS A LISTA) */}
           <div className="dashboard-river-card">
             <h3 className="river-title">Atualizações Nível do Rio</h3>
 
             <div className="river-list">
-              {riverLevels.map((item, index) => (
-                <div className="river-row" key={index}>
-                  <span className="river-date">
-                    Dia {item.data.toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "2-digit",
-                    })}
-                  </span>
-                  <RiverLevelIcon className="river-icon" />
-                  <span className="river-level">
-                    {Number(item.nivel).toFixed(2)} m
-                  </span>
+              {riverLevels.length === 0 ? (
+                <div className="river-row">
+                  <span className="river-date">Sem leituras disponíveis</span>
                 </div>
-              ))}
+              ) : (
+                riverLevels.map((item, index) => {
+                  const dateObj =
+                    item.data instanceof Date ? item.data : new Date(item.data);
+                  const formattedDate = isNaN(dateObj.getTime())
+                    ? "-"
+                    : dateObj.toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                      });
+
+                  return (
+                    <div className="river-row" key={index}>
+                      <div className="river-left">
+                        <span className="river-date">Dia {formattedDate}</span>
+                        <RiverLevelIcon className="river-icon" />
+                      </div>
+                      <span className="river-level">
+                        {item.nivel === null || item.nivel === undefined
+                          ? "—"
+                          : `${Number(item.nivel).toFixed(2)} m`}
+                      </span>
+                    </div>
+                  );
+                })
+              )}
             </div>
+          </div>
+        </section>
+
+        {/* NOVO CARD (ABAIXO) SOMENTE PARA O GRÁFICO */}
+        <section className="dashboard-chart-card">
+          <h3 className="river-title">Evolução do Nível do Rio</h3>
+          <div className="chart-card-inner">
+            <RiverChart station="Itacoatiara-AM" points={9} />
           </div>
         </section>
       </main>
@@ -131,7 +160,7 @@ export default function Dashboard() {
   );
 }
 
-
+/* ---------- ICONS ---------- */
 
 function LocationIcon({ className }) {
   return (
@@ -228,7 +257,7 @@ function RiverLevelIcon({ className }) {
       className={className}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="white"
+      stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
