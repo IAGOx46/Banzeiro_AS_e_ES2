@@ -8,6 +8,9 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile"; // <-- nova import
+import AdminRoute from "./components/AdminRoute";
+
+
 
 function App() {
   return (
@@ -19,6 +22,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} /> {/* nova rota */}
+          <Route path="/admin" element={<AdminRoute><nivelPainel/></AdminRoute>} />
         </Routes>
       </Container>
     </BrowserRouter>

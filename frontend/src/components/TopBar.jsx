@@ -4,13 +4,16 @@ import { signOut } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import "./topbar.css";
 
+
 export default function TopBar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [photoURL, setPhotoURL] = useState(null);
 
   const db = getFirestore();
 
-  // 🔥 Carrega foto do Firestore
+  
+
+  // Carrega foto do Firestore
   useEffect(() => {
     async function loadUserPhoto() {
       if (!user?.uid) return;

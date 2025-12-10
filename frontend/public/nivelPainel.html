@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel Administrativo - Nível do Rio</title>
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #0b1b2b;         /* very dark blue */
+      --bg-2: #07243a;
+      --card-start: #0e4f75;
+      --card-end: #0b3b58;
+      --accent: #ff9f1c;       /* orange line color */
+      --muted: rgba(255,255,255,0.75);
+      --glass: rgba(255,255,255,0.03);
+      --success: #21c07a;
+      --danger: #ff4d4d;
+      --shadow: 0 12px 30px rgba(2,8,23,0.6);
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:"Roboto", Arial, sans-serif;
+      background: linear-gradient(180deg, #152238 0%, #071a2a 60%, #001022 100%);
+      color: #eaf6ff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    header.top {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brand .logo {
+      width:44px; height:44px;
+      border-radius:8px;
+      background: linear-gradient(135deg,var(--card-start),var(--card-end));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: var(--shadow);
+      font-weight:700;
+      font-size:18px;
+      color:#fff;
+    }
+
+    .brand h1 {
+      font-size:20px;
+      margin:0;
+      color:#ffffff;
+      font-weight:600;
+    }
+
+    .controls {
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    /* ===== GRID principal ===== */
+    .grid {
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+    }
+
+    /* Form Card */
+    .card {
+      border-radius:14px;
+      padding:18px;
+      background: linear-gradient(180deg,var(--card-start),var(--card-end));
+      box-shadow: var(--shadow);
+      box-sizing:border-box;
+    }
+
+    .card h2 {
+      margin:0 0 8px 0;
+      font-size:18px;
+      color:#fff;
+    }
+
+    label {
+      display:block;
+      font-size:13px;
+      margin-top:12px;
+      color: rgba(255,255,255,0.9);
+    }
+
+    select, input[type="text"], input[type="number"], input[type="date"]{
+      width:100%;
+      padding:10px 12px;
+      margin-top:8px;
+      border-radius:8px;
+      border: none;
+      background: rgba(255,255,255,0.04);
+      color: #eaf6ff;
+      font-size:15px;
+      box-sizing:border-box;
+    }
+
+    select:focus, input:focus { outline: 2px solid rgba(255,255,255,0.06); }
+
+    .muted {
+      font-size:13px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      justify-content:center;
+      padding:10px 14px;
+      border-radius:10px;
+      border:none;
+      background: var(--accent);
+      color:#071726;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:14px;
+      width:100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    .btn.secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.06);
+      font-weight:600;
+    }
+    .btn.danger { background: var(--danger); color:#fff; }
+
+    #msg {
+      margin-top:12px;
+      min-height:20px;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    /* Table Card */
+    .card.table-card {
+      background: linear-gradient(180deg,#081a2c,#041526);
+      padding:16px;
+    }
+
+    .toolbar {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin-bottom:12px;
+      justify-content:space-between;
+    }
+
+    .toolbar .left { display:flex; gap:8px; align-items:center; }
+    .toolbar select, .toolbar input[type="search"] {
+      padding:8px 10px;
+      border-radius:8px;
+      background: rgba(255,255,255,0.03);
+      border:none;
+      color:#fff;
+    }
+
+    .table-wrap {
+      overflow:auto;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:10px;
+      padding:8px;
+    }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+      color:#e6f8ff;
+    }
+
+    thead th {
+      text-align:left;
+      padding:10px 12px;
+      font-size:13px;
+      color: rgba(255,255,255,0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    tbody td {
+      padding:10px 12px;
+      border-bottom: 1px dashed rgba(255,255,255,0.03);
+    }
+
+    .row-actions { display:flex; gap:8px; justify-content:flex-end; }
+
+    .icon-btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      background: rgba(255,255,255,0.03);
+      color: #eaf6ff;
+      transition: all .15s;
+    }
+    .icon-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.06); }
+
+    .icon-edit { color: #ffd37a; }
+    .icon-delete { color: #ff9d9d; }
+
+    /* modal */
+    #editModal {
+      display:none;
+      position:fixed;
+      inset:0;
+      align-items:center;
+      justify-content:center;
+      background: rgba(2,6,12,0.6);
+      z-index:40;
+    }
+    #editModal .modal-content{
+      background: linear-gradient(180deg,#062432,#04334a);
+      padding:18px;
+      border-radius:12px;
+      color:#eaf6ff;
+      width:360px;
+      box-shadow: var(--shadow);
+    }
+    #editModal h3 { margin:0 0 10px 0; }
+
+    .modal-row { display:flex; gap:8px; margin-top:8px; }
+    .modal-row input { flex:1; }
+
+    /* toast */
+    .toast {
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background: rgba(0,0,0,0.7);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:8px;
+      box-shadow:0 8px 18px rgba(0,0,0,0.4);
+      display:none;
+      z-index:50;
+    }
+
+    /* responsive */
+    @media (max-width: 920px) {
+      .grid { grid-template-columns: 1fr; }
+      .card { padding:16px; border-radius:10px; }
+      #editModal .modal-content{ width: 92%; }
+      .brand h1 { font-size:18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">B</div>
+        <h1>Painel Administrativo — Nível do Rio</h1>
+      </div>
+
+      <div class="controls">
+        <div class="muted">Usuário: <strong>Administrador</strong></div>
+      </div>
+    </header>
+
+    <main class="grid">
+      <!-- Formulário de registro -->
+      <section class="card">
+        <h2>Registrar Nível</h2>
+
+        <label for="local">Cidade</label>
+        <select id="local" aria-label="Cidade">
+          <option value="">Selecione</option>
+          <option value="Itacoatiara-AM">Itacoatiara-AM</option>
+          <option value="Manaus-AM">Manaus-AM</option>
+        </select>
+
+        <label for="rio">Rio</label>
+        <select id="rio" aria-label="Rio">
+          <option value="">Selecione...</option>
+          <option value="Rio Amazonas">Rio Amazonas</option>
+          <option value="Rio Solimões">Rio Solimões</option>
+          <option value="Rio Negro">Rio Negro</option>
+          <option value="Outros">Outro (digitar abaixo)</option>
+        </select>
+
+        <input type="text" id="rioOutro" placeholder="Digite o nome do rio" style="display:none;" />
+
+        <label for="nivel">Nível (m)</label>
+        <input type="number" step="0.01" id="nivel" placeholder="Ex: 27.52">
+
+        <label for="data">Data da medição</label>
+        <input type="date" id="data">
+
+        <button class="btn" id="btnSalvar">Salvar</button>
+        <div id="msg" role="status" aria-live="polite"></div>
+      </section>
+
+      <!-- Tabela e listagem -->
+      <section class="card table-card">
+        <div class="toolbar">
+          <div class="left">
+            <label style="margin-right:8px;color:var(--muted);font-size:13px;">Filtrar cidade</label>
+            <select id="cidadeListagem" aria-label="Filtrar cidade">
+              <option value="">Selecione</option>
+              <option value="Itacoatiara-AM">Itacoatiara-AM</option>
+              <option value="Manaus-AM">Manaus-AM</option>
+            </select>
+          </div>
+
+          <div>
+            <input type="search" id="filterSearch" placeholder="Procurar rio ou data..." />
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="tabelaRegistros" aria-live="polite">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Rio</th>
+                <th style="text-align:right;">Nível (m)</th>
+                <th style="text-align:right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal de edição -->
+  <div id="editModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-content">
+      <h3>Editar Registro</h3>
+
+      <label>Rio</label>
+      <input type="text" id="editRio">
+
+      <label>Nível</label>
+      <input type="number" step="0.01" id="editNivel">
+
+      <label>Data</label>
+      <input type="date" id="editData">
+
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <button class="btn" id="btnSalvarEdit" style="flex:1;">Salvar</button>
+        <button class="btn secondary" id="btnCancelarEdit" style="flex:1;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- FIREBASE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      updateDoc,
+      doc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // configuração do Firebase (mantive a sua)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_s9aU_u4y9-QdKAJaTve8md9FZxc5CS8",
+      authDomain: "banzeiro-5f94c.firebaseapp.com",
+      projectId: "banzeiro-5f94c",
+      storageBucket: "banzeiro-5f94c.firebasestorage.app",
+      messagingSenderId: "485805652054",
+      appId: "1:485805652054:web:fe648f81b3bdf94ceca3f7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // elementos
+    const rioSelect = document.getElementById("rio");
+    const rioOutro = document.getElementById("rioOutro");
+    const btnSalvar = document.getElementById("btnSalvar");
+    const msgEl = document.getElementById("msg");
+    const cidadeListagem = document.getElementById("cidadeListagem");
+    const tabelaBody = document.querySelector("#tabelaRegistros tbody");
+    const toast = document.getElementById("toast");
+    const filterSearch = document.getElementById("filterSearch");
+
+    let cidadeAtual = "";
+    let registrosCache = []; // cache local para filtro/edição
+    let registroSelecionado = null;
+
+    rioSelect.addEventListener("change", () => {
+      rioOutro.style.display = rioSelect.value === "Outros" ? "block" : "none";
+    });
+
+    function showToast(text, success = true) {
+      toast.textContent = text;
+      toast.style.background = success ? "rgba(33,192,122,0.95)" : "rgba(255,77,77,0.95)";
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2800);
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      // se já for YYYY-MM-DD (input date) ou ISO, converte para pt-BR
+      const d = new Date(value);
+      if (isNaN(d)) return value;
+      return d.toLocaleDateString("pt-BR");
+    }
+
+    function formatNumber(v) {
+      if (v === null || v === undefined || v === "") return "—";
+      return Number(v).toFixed(2).replace(".", ",");
+    }
+
+    // limpar form
+    function clearForm() {
+      document.getElementById("local").value = "";
+      document.getElementById("rio").value = "";
+      document.getElementById("rioOutro").value = "";
+      document.getElementById("rioOutro").style.display = "none";
+      document.getElementById("nivel").value = "";
+      document.getElementById("data").value = "";
+    }
+
+    // salva um novo registro
+    btnSalvar.addEventListener("click", async () => {
+      const local = document.getElementById("local").value;
+      const selectRio = rioSelect.value;
+      const outro = rioOutro.value.trim();
+      const nivel = parseFloat(document.getElementById("nivel").value);
+      const data = document.getElementById("data").value;
+
+      if (!local || !selectRio || (selectRio === "Outros" && !outro) || isNaN(nivel) || !data) {
+        msgEl.textContent = "Preencha todos os campos corretamente.";
+        msgEl.style.color = "var(--danger)";
+        return;
+      }
+
+      try {
+        msgEl.textContent = "";
+        const rio = selectRio === "Outros" ? outro : selectRio;
+        const ref = collection(db, "nivel_rio", local, "registros");
+        await addDoc(ref, { cidade: local, rio, nivel, data });
+        showToast("Registro salvo com sucesso.", true);
+        clearForm();
+        listarRegistros(); // atualizar a lista
+      } catch (err) {
+        console.error("Erro salvar:", err);
+        showToast("Erro ao salvar registro.", false);
+      }
+    });
+
+    // listar registros conforme cidade e filtro
+    async function listarRegistros() {
+      cidadeAtual = cidadeListagem.value;
+      tabelaBody.innerHTML = "";
+      registrosCache = [];
+      if (!cidadeAtual) return;
+
+      try {
+        const ref = collection(db, "nivel_rio", cidadeAtual, "registros");
+        const snap = await getDocs(ref);
+        snap.forEach(docItem => {
+          const item = docItem.data();
+          registrosCache.push({ id: docItem.id, ...item });
+        });
+        renderTable(registrosCache);
+      } catch (err) {
+        console.error("Erro listar:", err);
+        showToast("Erro ao buscar registros.", false);
+      }
+    }
+
+    // renderizar tabela a partir do cache (aplica filtro)
+    function renderTable(list) {
+      tabelaBody.innerHTML = "";
+      const q = (filterSearch.value || "").toLowerCase().trim();
+
+      const filtered = list.filter(it => {
+        if (!q) return true;
+        return String(it.rio || "").toLowerCase().includes(q) ||
+               String(it.data || "").toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.setAttribute("colspan", 4);
+        td.style.textAlign = "center";
+        td.style.padding = "18px";
+        td.style.color = "rgba(255,255,255,0.6)";
+        td.textContent = "Nenhum registro encontrado.";
+        tr.appendChild(td);
+        tabelaBody.appendChild(tr);
+        return;
+      }
+
+      filtered.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const tdData = document.createElement("td");
+        tdData.textContent = formatDate(item.data);
+        tr.appendChild(tdData);
+
+        const tdRio = document.createElement("td");
+        tdRio.textContent = item.rio || "—";
+        tr.appendChild(tdRio);
+
+        const tdNivel = document.createElement("td");
+        tdNivel.style.textAlign = "right";
+        tdNivel.textContent = formatNumber(item.nivel);
+        tr.appendChild(tdNivel);
+
+        const tdActions = document.createElement("td");
+        tdActions.style.textAlign = "right";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "row-actions";
+
+        const btnEdit = document.createElement("button");
+        btnEdit.className = "icon-btn icon-edit";
+        btnEdit.title = "Editar";
+        btnEdit.innerHTML = "✏️";
+        btnEdit.addEventListener("click", () => abrirEdicao(item.id, item));
+
+        const btnDel = document.createElement("button");
+        btnDel.className = "icon-btn icon-delete";
+        btnDel.title = "Excluir";
+        btnDel.innerHTML = "🗑️";
+        btnDel.addEventListener("click", () => removerRegistro(item.id));
+
+        wrapper.appendChild(btnEdit);
+        wrapper.appendChild(btnDel);
+        tdActions.appendChild(wrapper);
+        tr.appendChild(tdActions);
+
+        tabelaBody.appendChild(tr);
+      });
+    }
+
+    cidadeListagem.addEventListener("change", () => listarRegistros());
+    filterSearch.addEventListener("input", () => renderTable(registrosCache));
+
+    // remover registro
+    async function removerRegistro(id) {
+      if (!confirm("Deseja realmente excluir este registro?")) return;
+      try {
+        const ref = doc(db, "nivel_rio", cidadeAtual, "registros", id);
+        await deleteDoc(ref);
+        showToast("Registro excluído.", true);
+        listarRegistros();
+      } catch (err) {
+        console.error("Erro excluir:", err);
+        showToast("Erro ao excluir registro.", false);
+      }
+    }
+
+    // abrir edição
+    function abrirEdicao(id, item) {
+      registroSelecionado = id;
+      document.getElementById("editRio").value = item.rio || "";
+      document.getElementById("editNivel").value = item.nivel ?? "";
+      document.getElementById("editData").value = item.data || "";
+      document.getElementById("editModal").style.display = "flex";
+      document.getElementById("editModal").setAttribute("aria-hidden", "false");
+    }
+
+    // fechar modal
+    document.getElementById("btnCancelarEdit").addEventListener("click", () => {
+      document.getElementById("editModal").style.display = "none";
+      document.getElementById("editModal").setAttribute("aria-hidden", "true");
+    });
+
+    // salvar edição
+    document.getElementById("btnSalvarEdit").addEventListener("click", async () => {
+      const rio = document.getElementById("editRio").value.trim();
+      const nivel = parseFloat(document.getElementById("editNivel").value);
+      const data = document.getElementById("editData").value;
+
+      if (!rio || isNaN(nivel) || !data) {
+        showToast("Preencha todos os campos da edição.", false);
+        return;
+      }
+
+      try {
+        const ref = doc(db, "nivel_rio", cidadeAtual, "registros", registroSelecionado);
+        await updateDoc(ref, { rio, nivel, data });
+        document.getElementById("editModal").style.display = "none";
+        document.getElementById("editModal").setAttribute("aria-hidden", "true");
+        showToast("Registro atualizado.", true);
+        listarRegistros();
+      } catch (err) {
+        console.error("Erro atualizar:", err);
+        showToast("Erro ao atualizar registro.", false);
+      }
+    });
+
+    // Expor funções no escopo global caso precise (opcional)
+    window.removerRegistro = removerRegistro;
+    window.abrirEdicao = abrirEdicao;
+
+    // inicializa listagem vazia
+    listarRegistros();
+  </script>
+</body>
+
+</html>

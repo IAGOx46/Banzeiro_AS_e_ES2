@@ -1,6 +1,10 @@
 // frontend/src/components/Login.js
 import React, { useState } from "react";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
@@ -15,20 +19,64 @@ export default function Login() {
 
   const provider = new GoogleAuthProvider();
 
+  // lê lista de emails admin das variáveis de ambiente
+  const adminEmails = (
+    (process.env.REACT_APP_ADMIN_EMAILS || process.env.REACT_APP_ADMIN_EMAIL) ||
+    ""
+  )
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  // Helper: decide para onde redirecionar conforme email
+  function redirectByEmail(userEmail) {
+    const emailLower = (userEmail || "").toLowerCase();
+    if (adminEmails.includes(emailLower)) {
+      // Opção A: redireciona direto para o HTML estático do painel admin
+      // Certifique-se de colocar frontend/public/nivelPainel.html
+      window.location.href = "/nivelPainel.html";
+    } else {
+      navigate("/dashboard");
+    }
+  }
+
+  // login por e-mail/senha
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      // redireciona para dashboard
-      navigate("/dashboard");
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+
+      // garante que exista documento users/{uid} (cria se necessário)
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: user.uid,
+            nome: user.displayName || "",
+            email: user.email || "",
+            foto: user.photoURL || "",
+            criadoEm: new Date(),
+            location: { city: "Itacoatiara-AM" },
+          });
+        }
+      } catch (err) {
+        console.warn("Erro ao criar/verificar documento do usuário:", err);
+      }
+
+      // redireciona conforme o email (admin ou usuário comum)
+      redirectByEmail(user.email);
     } catch (err) {
+      console.error("Erro ao fazer login:", err);
       alert("Erro ao fazer login: " + (err.message || err));
     } finally {
       setLoading(false);
     }
   };
 
+  // login com Google
   const handleGoogleLogin = async () => {
     try {
       setLoading(true);
@@ -36,22 +84,26 @@ export default function Login() {
       const user = result.user;
 
       // se não existir usuário no Firestore, cria documento
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: user.uid,
-          nome: user.displayName || "",
-          email: user.email || "",
-          foto: user.photoURL || "",
-          criadoEm: new Date(),
-          location: { city: "Itacoatiara-AM" } // padrão: Itacoatiara-AM
-        });
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: user.uid,
+            nome: user.displayName || "",
+            email: user.email || "",
+            foto: user.photoURL || "",
+            criadoEm: new Date(),
+            location: { city: "Itacoatiara-AM" }, // padrão
+          });
+        }
+      } catch (err) {
+        console.warn("Erro ao criar/verificar documento do usuário:", err);
       }
 
-      // redireciona para dashboard
-      navigate("/dashboard");
+      // redireciona conforme o email
+      redirectByEmail(user.email);
     } catch (err) {
       console.error("Erro ao logar com Google:", err);
       alert("Erro ao logar com Google: " + (err.message || err));
@@ -110,7 +162,10 @@ export default function Login() {
 
         <p className="auth-link" style={{ marginTop: 18 }}>
           Não tem conta?{" "}
-          <span style={{ textDecoration: "underline", cursor: "pointer" }} onClick={() => navigate("/register")}>
+          <span
+            style={{ textDecoration: "underline", cursor: "pointer" }}
+            onClick={() => navigate("/register")}
+          >
             Criar conta
           </span>
         </p>
