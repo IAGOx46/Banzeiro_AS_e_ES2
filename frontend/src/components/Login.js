@@ -1,10 +1,6 @@
 // frontend/src/components/Login.js
 import React, { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
@@ -14,10 +10,9 @@ import { db } from "../firebase";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const provider = new GoogleAuthProvider();
 
   // lê lista de emails admin das variáveis de ambiente
   const adminEmails = (
@@ -76,42 +71,6 @@ export default function Login() {
     }
   };
 
-  // login com Google
-  const handleGoogleLogin = async () => {
-    try {
-      setLoading(true);
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // se não existir usuário no Firestore, cria documento
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            uid: user.uid,
-            nome: user.displayName || "",
-            email: user.email || "",
-            foto: user.photoURL || "",
-            criadoEm: new Date(),
-            location: { city: "Itacoatiara-AM" }, // padrão
-          });
-        }
-      } catch (err) {
-        console.warn("Erro ao criar/verificar documento do usuário:", err);
-      }
-
-      // redireciona conforme o email
-      redirectByEmail(user.email);
-    } catch (err) {
-      console.error("Erro ao logar com Google:", err);
-      alert("Erro ao logar com Google: " + (err.message || err));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="auth-page">
       <div className="auth-card">
@@ -127,38 +86,39 @@ export default function Login() {
             required
           />
 
-          <input
-            type="password"
-            className="auth-input"
-            placeholder="Sua senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="password-input"
+              placeholder="Sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="eye-button"
+              onClick={() => setShowPassword((visible) => !visible)}
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {showPassword ? (
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 4.2A10.8 10.8 0 0112 4c5 0 9.3 3.1 11 8a12.5 12.5 0 01-2.1 3.5M6.6 6.6A12.4 12.4 0 001 12c1.7 4.9 6 8 11 8a10.8 10.8 0 005.4-1.4" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              )}
+            </button>
+          </div>
 
           <button className="auth-btn" type="submit" disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
-
-        <div style={{ marginTop: 12, textAlign: "center" }}>
-          <span style={{ color: "#e8f1ff", fontSize: 14 }}>ou</span>
-        </div>
-
-        <button
-          type="button"
-          className="auth-btn google-btn"
-          onClick={handleGoogleLogin}
-          style={{ marginTop: 12 }}
-          disabled={loading}
-        >
-          <img
-            src="https://developers.google.com/identity/images/g-logo.png"
-            alt="Google Logo"
-            style={{ width: 20, marginRight: 10 }}
-          />
-          {loading ? "Carregando..." : "Entrar com Google"}
-        </button>
 
         <p className="auth-link" style={{ marginTop: 18 }}>
           Não tem conta?{" "}

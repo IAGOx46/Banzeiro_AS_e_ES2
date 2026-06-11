@@ -4,9 +4,8 @@ import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } 
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -16,7 +15,6 @@ export default function Register() {
   const [cidade, setCidade] = useState(""); // inicial vazio para mostrar placeholder
 
   const navigate = useNavigate();
-  const provider = new GoogleAuthProvider();
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -53,31 +51,6 @@ export default function Register() {
     }
   };
 
-  const handleGoogleRegister = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: user.uid,
-          nome: user.displayName || "",
-          email: user.email || "",
-          foto: user.photoURL || "",
-          criadoEm: new Date(),
-          location: { city: "Itacoatiara-AM" },
-        });
-      }
-
-      alert("Conta criada com Google!");
-      navigate("/dashboard");
-    } catch (err) {
-      alert("Erro ao criar conta com Google: " + err.message);
-    }
-  };
-
   return (
     <div className="auth-page">
       <div className="auth-card">
@@ -110,13 +83,24 @@ export default function Register() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <div className="eye-button" onClick={() => setShowPassword(!showPassword)}>
+            <button
+              type="button"
+              className="eye-button"
+              onClick={() => setShowPassword((visible) => !visible)}
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
               {showPassword ? (
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#555" d="M12 6c3.86 0 7.17 2.22 8.82 5.5-.59 1.15-1.42 2.19-2.41 3.07l1.41 1.41C21.07 14.63 22 13 22 12c-1.73-4.39-6-7.5-11 -7.5-1.27 0-2.49.2-3.64.57l1.59 1.59C10.42 6.2 11.2 6 12 6z"/></svg>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8M9.9 4.2A10.8 10.8 0 0112 4c5 0 9.3 3.1 11 8a12.5 12.5 0 01-2.1 3.5M6.6 6.6A12.4 12.4 0 001 12c1.7 4.9 6 8 11 8a10.8 10.8 0 005.4-1.4" />
+                </svg>
               ) : (
-                <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#555" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11 -7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
               )}
-            </div>
+            </button>
           </div>
 
           {/* Select com placeholder interno */}
@@ -134,10 +118,6 @@ export default function Register() {
             Confirmar Conta
           </button>
 
-          <button type="button" className="auth-btn google-btn" onClick={handleGoogleRegister} style={{ marginTop: 8 }}>
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" style={{ width: 20, marginRight: 10 }} />
-            Criar conta com Google
-          </button>
         </form>
 
         <p className="auth-link" onClick={() => navigate("/")}>
