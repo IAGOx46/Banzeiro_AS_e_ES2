@@ -21,7 +21,7 @@ describe("getRiverLevels", () => {
     query.mockReturnValue({ query: true });
   });
 
-  test("busca, converte e limita os cinco registros mais recentes", async () => {
+  test("busca, converte e retorna historico com limite configuravel", async () => {
     const docs = Array.from({ length: 6 }, (_, index) => ({
       id: `doc-${index}`,
       data: () => ({
@@ -31,7 +31,7 @@ describe("getRiverLevels", () => {
     }));
     getDocs.mockResolvedValue({ docs });
 
-    const result = await getRiverLevels("Itacoatiara-AM");
+    const result = await getRiverLevels("Itacoatiara-AM", 5);
 
     expect(collection).toHaveBeenCalledWith(
       { name: "db" },

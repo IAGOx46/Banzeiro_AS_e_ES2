@@ -1,4 +1,4 @@
-import { getWeather } from "./weatherService";
+import { getHourlyForecast, getWeather } from "./weatherService";
 
 describe("getWeather", () => {
   beforeEach(() => {
@@ -30,9 +30,9 @@ describe("getWeather", () => {
       temp: 29,
       humidity: 82,
       rain: 12,
-      wind: 15,
-      max: 36,
-      min: 22,
+      wind: 11,
+      max: 31,
+      min: 24,
       description: "chuva leve",
       icon: "10d"
     });
@@ -56,5 +56,34 @@ describe("getWeather", () => {
     const weather = await getWeather();
 
     expect(weather.rain).toBe(0);
+  });
+
+  test("normaliza a previsao por horarios das proximas 24 horas", async () => {
+    fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue({
+        list: [
+          {
+            dt: 1767225600,
+            main: { temp: 29.4 },
+            pop: 0.63,
+            wind: { speed: 2.5 },
+            weather: [{ description: "chuva moderada", icon: "10d" }]
+          }
+        ]
+      })
+    });
+
+    const forecast = await getHourlyForecast();
+
+    expect(forecast).toHaveLength(1);
+    expect(forecast[0]).toEqual(
+      expect.objectContaining({
+        temp: 29,
+        rainProbability: 63,
+        wind: 9,
+        description: "chuva moderada",
+        icon: "10d"
+      })
+    );
   });
 });

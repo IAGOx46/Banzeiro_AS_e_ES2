@@ -1,42 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
-import { getWeather } from "../services/weatherService";
+import { getHourlyForecast, getWeather } from "../services/weatherService";
 import { getRiverLevels } from "../services/riverService";
 import TopBar from "../components/TopBar";
 import { auth } from "../firebase";
+import RiverSummaryCard from "./dashboard/RiverSummaryCard";
+import WeatherCard from "./dashboard/WeatherCard";
+import HourlyForecastCard from "./dashboard/HourlyForecastCard";
+import RiverHistoryCard from "./dashboard/RiverHistoryCard";
 import "../dashboard.css";
-import RiverChart from "../components/RiverChart";
+
+const CITY = "Itacoatiara-AM";
+const LOAD_ERROR_MESSAGE = "Tente atualizar a página ou verificar sua conexão.";
 
 export default function Dashboard() {
   const user = auth.currentUser;
   const [weather, setWeather] = useState(null);
+  const [hourlyForecast, setHourlyForecast] = useState([]);
   const [riverLevels, setRiverLevels] = useState([]);
+  const [historyWindow, setHistoryWindow] = useState(7);
+  const [errors, setErrors] = useState({ weather: "", forecast: "", river: "" });
   const [loading, setLoading] = useState(true);
 
-  async function loadWeather() {
-    const w = await getWeather();
-    setWeather(w);
-  }
-
-  async function loadRiver() {
-    const r = await getRiverLevels("Itacoatiara-AM");
-    if (Array.isArray(r)) {
-      setRiverLevels(r.slice(0, 4));
-    } else {
-      setRiverLevels([]);
-    }
-  }
-
   useEffect(() => {
-    async function loadAll() {
+    async function loadDashboardData() {
       setLoading(true);
-      await Promise.all([loadWeather(), loadRiver()]);
+
+      const [weatherResult, forecastResult, riverResult] = await Promise.allSettled([
+        getWeather(),
+        getHourlyForecast(),
+        getRiverLevels(CITY, 30)
+      ]);
+
+      setWeather(weatherResult.status === "fulfilled" ? weatherResult.value : null);
+      setHourlyForecast(
+        forecastResult.status === "fulfilled" && Array.isArray(forecastResult.value)
+          ? forecastResult.value
+          : []
+      );
+      setRiverLevels(
+        riverResult.status === "fulfilled" && Array.isArray(riverResult.value)
+          ? riverResult.value
+          : []
+      );
+
+      setErrors({
+        weather: weatherResult.status === "rejected" ? LOAD_ERROR_MESSAGE : "",
+        forecast: forecastResult.status === "rejected" ? LOAD_ERROR_MESSAGE : "",
+        river: riverResult.status === "rejected" ? LOAD_ERROR_MESSAGE : ""
+      });
       setLoading(false);
     }
-    loadAll();
+
+    loadDashboardData();
   }, []);
 
-  if (loading || !weather) {
+  if (loading) {
     return (
       <div className="loadingScreen">
         <Spinner animation="border" />
@@ -50,220 +69,28 @@ export default function Dashboard() {
       <TopBar user={user} />
 
       <main className="dashboard-container">
-        {/* CARD PRINCIPAL DO CLIMA */}
-        <section className="dashboard-main-card">
-          <div className="dashboard-main-left">
-            <div className="dashboard-header-row">
-              <span className="dashboard-city">{weather.city}</span>
-              <LocationIcon className="dashboard-location-icon" />
-            </div>
+        <RiverSummaryCard
+          city={CITY}
+          riverLevels={riverLevels}
+          historyWindow={historyWindow}
+          error={errors.river}
+        />
 
-            <div className="dashboard-temp-block">
-              <span className="dashboard-temp">{weather.temp}°</span>
-              <span className="dashboard-condition">
-                {weather.description}
-              </span>
-            </div>
-
-            <div className="dashboard-minmax-row">
-              <span>Max {weather.max}°</span>
-              <span>Min {weather.min}°</span>
-            </div>
-          </div>
-
-          <div className="dashboard-main-right">
-            <RainIcon className="dashboard-main-weather-icon" />
-          </div>
+        <section className="dashboard-grid">
+          <WeatherCard weather={weather} error={errors.weather} />
+          <HourlyForecastCard
+            forecast={hourlyForecast}
+            error={errors.forecast}
+          />
         </section>
 
-        {/* LINHA INFERIOR COM 2 CARDS */}
-        <section className="dashboard-bottom-row">
-          {/* MÉTRICAS DE CLIMA */}
-          <div className="dashboard-metrics-card">
-            <div className="metrics-row">
-              <div className="metrics-left">
-                <RainChanceIcon className="metrics-icon" />
-                <span className="metrics-label">Probabilidade de Chuva</span>
-              </div>
-              <span className="metrics-value">{weather.rain}%</span>
-            </div>
-
-            <div className="metrics-divider" />
-
-            <div className="metrics-row">
-              <div className="metrics-left">
-                <HumidityIcon className="metrics-icon" />
-                <span className="metrics-label">Umidade</span>
-              </div>
-              <span className="metrics-value">{weather.humidity}%</span>
-            </div>
-
-            <div className="metrics-divider" />
-
-            <div className="metrics-row">
-              <div className="metrics-left">
-                <WindIcon className="metrics-icon" />
-                <span className="metrics-label">Vento</span>
-              </div>
-              <span className="metrics-value">{weather.wind} Km/h</span>
-            </div>
-          </div>
-
-          {/* CARD NÍVEL DO RIO (APENAS A LISTA) */}
-          <div className="dashboard-river-card">
-            <h3 className="river-title">Atualizações Nível do Rio</h3>
-
-            <div className="river-list">
-              {riverLevels.length === 0 ? (
-                <div className="river-row">
-                  <span className="river-date">Sem leituras disponíveis</span>
-                </div>
-              ) : (
-                riverLevels.map((item, index) => {
-                  const dateObj =
-                    item.data instanceof Date ? item.data : new Date(item.data);
-                  const formattedDate = isNaN(dateObj.getTime())
-                    ? "-"
-                    : dateObj.toLocaleDateString("pt-BR", {
-                        day: "2-digit",
-                        month: "2-digit",
-                      });
-
-                  return (
-                    <div className="river-row" key={index}>
-                      <div className="river-left">
-                        <span className="river-date">Dia {formattedDate}</span>
-                        <RiverLevelIcon className="river-icon" />
-                      </div>
-                      <span className="river-level">
-                        {item.nivel === null || item.nivel === undefined
-                          ? "—"
-                          : `${Number(item.nivel).toFixed(2)} m`}
-                      </span>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* NOVO CARD (ABAIXO) SOMENTE PARA O GRÁFICO */}
-        <section className="dashboard-chart-card">
-          <h3 className="river-title">Evolução do Nível do Rio</h3>
-          <div className="chart-card-inner">
-            <RiverChart station="Itacoatiara-AM" points={9} />
-          </div>
-        </section>
+        <RiverHistoryCard
+          riverLevels={riverLevels}
+          historyWindow={historyWindow}
+          onHistoryWindowChange={setHistoryWindow}
+          error={errors.river}
+        />
       </main>
     </div>
-  );
-}
-
-/* ---------- ICONS ---------- */
-
-function LocationIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 21 22"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 21s-6-5.2-6-10.2C6 7.3 8.7 4.5 12 4.5s6 2.8 6 6.3C18 15.8 12 21 12 21z" />
-      <circle cx="12" cy="10.5" r="2.5" />
-    </svg>
-  );
-}
-
-function RainIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 32 32"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10 14a5 5 0 0 1 4.5-5 5 5 0 0 1 8.5 3 4 4 0 0 1-.5 8H11a4 4 0 0 1-1-7.9z" />
-      <line x1="10" y1="22" x2="8" y2="26" />
-      <line x1="16" y1="22" x2="14" y2="26" />
-      <line x1="22" y1="22" x2="20" y2="26" />
-    </svg>
-  );
-}
-
-function RainChanceIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M7 10a5 5 0 0 1 10 0 4 4 0 0 1-1 7.8H8a4 4 0 0 1-1-7.8z" />
-      <line x1="9" y1="19" x2="7.5" y2="21.5" />
-      <line x1="13" y1="19" x2="11.5" y2="21.5" />
-    </svg>
-  );
-}
-
-function HumidityIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 3.5s-5 5-5 9.2A5 5 0 0 0 12 18a5 5 0 0 0 5-5.3c0-4.2-5-9.2-5-9.2z" />
-      <path d="M10 14a2 2 0 0 0 2 2" />
-    </svg>
-  );
-}
-
-function WindIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="white"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 9h8a2.5 2.5 0 1 0-2.4-3" />
-      <path d="M3 13h13a2.5 2.5 0 1 1-2.4 3" />
-      <path d="M5 17h5" />
-    </svg>
-  );
-}
-
-function RiverLevelIcon({ className }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M4 16c1 .6 2 .9 3 .9s2-.3 3-.9 2-.9 3-.9 2 .3 3 .9 2 .9 3 .9" />
-      <path d="M4 12c1 .6 2 .9 3 .9s2-.3 3-.9 2-.9 3-.9 2 .3 3 .9 2 .9 3 .9" />
-    </svg>
   );
 }

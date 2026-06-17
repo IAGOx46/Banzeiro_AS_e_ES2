@@ -3,7 +3,7 @@
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 
-export async function getRiverLevels(cidade) {
+export async function getRiverLevels(cidade, limit = 30) {
   try {
     const ref = collection(db, "nivel_rio", cidade, "registros");
 
@@ -27,7 +27,7 @@ export async function getRiverLevels(cidade) {
     });
 
     // Retorna apenas os 5 últimos
-    return registros.slice(0, 5);
+    return registros.slice(0, limit);
 
   } catch (error) {
     console.error("Erro ao buscar níveis:", error);
