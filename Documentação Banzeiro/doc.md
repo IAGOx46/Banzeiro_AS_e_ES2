@@ -10,7 +10,7 @@
 - Geovanni Ferreira Marques Veras  
 - Iago Vinícius Farias do Amaral  
 - Lucas Castro dos Anjos  
-- Marcos Gabriel Liborio Pontes
+- Marcos Gabriel Libório Pontes
 
 ---
 
