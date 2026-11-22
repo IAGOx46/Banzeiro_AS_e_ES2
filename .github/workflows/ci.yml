@@ -1,0 +1,36 @@
+name: CI ReactJS
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release
+      - development
+      - 'features/*'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Baixa o código do repositório
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      # Configura Node.js (versão usada pelo React)
+      - name: Configura Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'   # ajuste para a versão do seu projeto
+
+      # Instala dependências
+      - name: Instala dependências
+        run: npm install
+
+      # Roda os testes (React já vem com Jest configurado por padrão)
+      - name: Executa testes
+        run: npm test -- --watchAll=false
+
+      # Roda o build para verificar se o projeto compila sem erros
+      - name: Executa build
+        run: npm run build
